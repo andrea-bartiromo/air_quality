@@ -27,7 +27,7 @@ const rows = computed<DayPoint[]>(() => {
   return [...days].sort((a, b) => (a.date > b.date ? -1 : 1))
 })
 
-// media ponderata 7 giorni (se presente)
+// media ponderata 7 giorni (se presente) per la metrica selezionata
 const weighted = computed(
   () => data.weighted?.[selected.value]?.weighted_average_7d ?? null
 )
@@ -39,6 +39,13 @@ const weighted = computed(
       <h1 style="margin:0;">Stazione {{ data.name || data.id }}</h1>
       <NuxtLink to="/" style="margin-left:auto;text-decoration:underline;">← Back</NuxtLink>
     </div>
+
+    <!-- AGGIUNTA: riepilogo media ponderata 7g per TUTTE le metriche -->
+    <ul v-if="metricKeys.length" style="display:flex; gap:12px; flex-wrap:wrap; margin:12px 0; padding:0; list-style:none;">
+      <li v-for="k in metricKeys" :key="k" style="border:1px solid #ddd;padding:6px 10px;border-radius:6px;">
+        <b>{{ k }}</b> · 7g: <span>{{ data.weighted?.[k]?.weighted_average_7d ?? 'n/a' }}</span>
+      </li>
+    </ul>
 
     <div v-if="metricKeys.length" style="margin-top:12px;display:flex;align-items:center;gap:12px;">
       <label for="metric">Metrica:</label>
